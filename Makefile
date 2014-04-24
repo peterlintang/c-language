@@ -5,7 +5,9 @@ TARGETS := count-blanks	\
 		one-word-perline \
 		word-histogram	\
 		max-line		\
-		great-80-chars-line.c
+		great-80-chars-line	
+default:
+	echo "do nothing for save"
 all: $(TARGETS)
 	@echo "done"
 count-blanks:
