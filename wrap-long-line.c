@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #define MAXLENGTH		1024
-#define COL_WRAP_POS	24
+#define COL_WRAP_POS	24	// may be should call CHAR_WRAP_POS
 
 int getline(char *str, int *plen)
 {
