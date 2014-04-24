@@ -10,6 +10,7 @@
 #define	IN_QUOTE	1
 #define IN_COMMENT	2
 #define OUT_COMMENT	3
+#define ONE_LINE	0x10
 
 int main(int argc, char *argv[])
 {
@@ -38,6 +39,11 @@ int main(int argc, char *argv[])
 		 */
 		if (comment == IN_COMMENT) {
 			prev_c = c;
+			if ((comment & ONE_LINE) == ONE_LINE) {
+				if (prev_c == '\n')
+					comment = OUT_COMMENT;
+				continue;
+			}
 			if ((prev_c == '*') && ((c = getchar()) == '/'))
 				comment = OUT_COMMENT;
 			if ((prev_c == '/') && ((c = getchar()) == '*')) {
@@ -48,10 +54,13 @@ int main(int argc, char *argv[])
 			prev_c = c;
 			if (prev_c == '/') {
 				if ((c = getchar()) == '*') {
+//				if (((c = getchar()) == '*') || (c == '/')) {
 					comment = IN_COMMENT;
+				} else if (c == '/') {
+					comment = IN_COMMENT | ONE_LINE;
 				} else {
-				putchar(prev_c);
-				putchar(c);
+					putchar(prev_c);
+					putchar(c);
 				}
 			} else {
 				putchar(prev_c);
