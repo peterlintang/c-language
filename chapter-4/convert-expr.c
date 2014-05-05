@@ -76,6 +76,7 @@ int getop(char s[])
  * convert express from middle to backend 
  * not dealing with (a....) * a format
  * just a + b - c * d / e + f formats
+ * implement in some elegant ways ??? let's have a look on later
  */
 
 int main(int argc, char *argv[])
