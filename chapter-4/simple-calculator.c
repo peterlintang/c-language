@@ -91,45 +91,97 @@ int getop(char s[])
  * implement a very simple calculator
  */
 
-int main(int argc, char *argv[])
-{
+struct op_cmd {
 	int type;
+	int (*do_op)(int type, char s[]);
+}; 
+
+static int do_sub(int type, char s[])
+{
 	double op1;
 	double op2;
+
+	op2 = pop();
+	op1 = pop();
+	push(op1 - op2);
+}
+
+static int do_plus(int type, char s[])
+{
+	double op1;
+	double op2;
+
+	op1 = pop();
+	op2 = pop();
+	push(op1 + op2);
+}
+
+static int do_mul(int type, char s[])
+{
+	double op1;
+	double op2;
+
+	op1 = pop();
+	op2 = pop();
+	push(op1 * op2);
+}
+
+static int do_div(int type, char s[])
+{
+	double op1;
+	double op2;
+
+	op2 = pop();
+	op1 = pop();
+	push(op1 / op2);
+}
+
+static int do_mod(int type, char s[])
+{
+	int op1;
+	int op2;
+
+	op2 = (int )pop();
+	op1 = (int )pop();
+	push(op1 % op2);
+}
+
+static int do_number(int type, char s[])
+{
+	push(atof(s));
+}
+
+static int do_new_line(int type, char s[])
+{
+	printf("result: %f\n", pop());
+}
+
+static struct op_cmd ops[] = {
+	{ '-', do_sub },
+	{ '+', do_plus },
+	{ '*', do_mul },
+	{ '/', do_div },
+	{ '%', do_mod },
+	{ NUMBER, do_number },
+	{ '\n', do_new_line }
+};
+
+#define ARRAY_SIZE(s) (sizeof((s)) / sizeof((s)[0]))
+
+int main(int argc, char *argv[])
+{
+	int i;
+	int type;
 	char s[1024];
 
 	while ((type = getop(s)) != EOF) {
-		switch (type) {
-			case NUMBER:
-				push(atof(s));
+		for (i = 0; i < ARRAY_SIZE(ops); i++)
+			if (ops[i].type == type) {
+				ops[i].do_op(type, s);
 				break;
-			case '-':
-				op2 = pop();
-				op1 = pop();
-				push(op1 - op2);
-				break;
-			case '+':
-				op1 = pop();
-				op2 = pop();
-				push(op1 + op2);
-				break;
-			case '*':
-				op1 = pop();
-				op2 = pop();
-				push(op1 * op2);
-				break;
-			case '/':
-				op2 = pop();
-				op1 = pop();
-				push(op1 / op2);
-				break;
-			case '\n':
-				printf("result: %f\n", pop());
-				break;
-			default:
-				printf("unknow type\n");
-				break;
-		}
+			}
+		if (i == ARRAY_SIZE(ops))
+			fprintf(stderr, "unknow type: %d, %c\n", type, type);
 	}
 
 	exit(0);
