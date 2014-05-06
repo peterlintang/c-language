@@ -80,10 +80,24 @@ int getop(char s[])
  * it seems that we dont have error handling , so ???
  */
 
+#define 	ASSIGN_PRI			0
+#define 	PLUS_PRI			1
+#define 	SUB_PRI				1
+#define 	MUL_PRI				2
+#define 	DIV_PRI				2
+#define		LEFT_BRACKET_PRI	3
+#define		RIGHT_BRACKET_PRI	3
+#define		DEFAULT_PRI			10
+
+#define ARRAY_SIZE(s) (sizeof((s)) / sizeof((s[0])))
+
 struct op_cmd {
 	int type;
+	int	priority;
 	void (*do_op)(int type, char s[]);
 };
+
+int op_compare_pri(int type, int op);
 
 void do_left_bracket(int type, char s[])
 {
@@ -184,18 +198,49 @@ void do_number(int type, char s[])
 	fprintf(stdout, " %s ", s);
 }
 
+
 static struct op_cmd ops[] = {
-	{ '-', do_sub },
-	{ '+', do_plus },
-	{ '*', do_mul },
-	{ '/', do_div },
-	{ '\n', do_new_line },
-	{ '(', do_left_bracket },
-	{ ')', do_right_bracket },
-	{ NUMBER, do_number },
+	{ '-', SUB_PRI, 	do_sub },
+	{ '+', PLUS_PRI, 	do_plus },
+	{ '*', MUL_PRI,		do_mul },
+	{ '/', DIV_PRI		,do_div },
+	{ '(', LEFT_BRACKET_PRI, do_left_bracket },
+	{ ')', RIGHT_BRACKET_PRI, do_right_bracket },
+	{ NUMBER, DEFAULT_PRI, do_number },
+	{ '\n', DEFAULT_PRI, do_new_line },
 };
 
-#define ARRAY_SIZE(s) (sizeof((s)) / sizeof((s[0])))
+
+int op_search_pri(int type)
+{
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(ops); i++) {
+		if (type == ops[i].type)
+			return ops[i].priority;
+	}
+
+	return -1;
+}
+
+/*
+ * if @type 's pri is higher or equal to @op
+ * return 1, else return 0;
+ * error return -1;
+ */
+int op_compare_pri(int type, int op)
+{
+	int pri1;
+	int pri2;
+
+	pri1 = op_search_pri(type);
+	pri2 = op_search_pri(op);
+	
+	if (pri1 == -1 || pri2 == -1)
+		return -1;
+	return pri1 >= pri2;
+}
+
 
 int main(int argc, char *argv[])
 {
