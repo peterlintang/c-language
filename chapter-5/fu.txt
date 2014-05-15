@@ -1,0 +1,7 @@
+1.23
+-1.23
+[]1.23
+Nice boy	-1.23
+nice boy	1.23
++2.3345
+hello world
