@@ -1,6 +1,6 @@
 
 /*
- * wrap long line tnto several short lines
+ * wrap long line into several short lines
  */
 #include <stdio.h>
 #include <stdlib.h>
