@@ -80,6 +80,19 @@ int getop(char s[])
  * it seems that we dont have error handling , so ???
  */
 
+int is_op_char(int type)
+{
+	int i;
+	static int op_array[] = { '-', '+', '*', '/', '(', ')' };
+
+	for (i = 0; i < sizeof(op_array)/sizeof(op_array[0]); i++) {
+		if (type == op_array[i])
+			return 1;
+	}
+
+	return 0;
+}
+
 void do_left_bracket(int type)
 {
 	if (type == '(')
