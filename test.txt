@@ -2,8 +2,14 @@ aaa ssd
   a	a	b
 a     b    s                      d
 	a
-
-
-
-
-
+/*
+* sdfwefl	//// 
+* nsdflwe
+*/
+"hello wljsdf* asdf*sdfasdf*/ sdfsf";
+//lshes /* hello world */
+int main(int argc, char *argv[])
+{
+	if (
+	;
+}
